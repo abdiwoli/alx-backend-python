@@ -1,4 +1,4 @@
-#!usr/bin/python3
+#!/usr/bin/env python3
 """ advanced tasks """
 from typing import Iterable, Sequence, List, Tuple, Any, Union
 
