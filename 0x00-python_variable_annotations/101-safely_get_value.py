@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """ 101-safely_get_value.py """
-from typing import Iterable, Sequence
-from typing import List, Tuple, Any, Union, Mapping, TypeVar
+from typing import Any, Union, Mapping, TypeVar
 
 
 def safely_get_value(dct: Mapping, key: Any, default: Union[TypeVar(
