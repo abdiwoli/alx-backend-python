@@ -3,8 +3,12 @@
 from typing import Any, Union, Mapping, TypeVar
 
 
-def safely_get_value(dct: Mapping, key: Any, default: Union[TypeVar(
-        'T'), None] = None) -> Union[TypeVar('T'), type(None)]:
+""" T type """
+T = TypeVar('T')
+
+
+def safely_get_value(dct: Mapping, key: Any,
+                     default: Union[T, None] = None) -> Union[T, None]:
     """ function saveley get value """
     if key in dct:
         return dct[key]
