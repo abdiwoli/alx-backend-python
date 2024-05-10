@@ -9,5 +9,6 @@ async def wait_n(n: int, max_delay: int) -> List[float]:
     """ wait n times calling random_wait """
     arr = []
     for i in range(n):
-        arr.append(await wait_random(max_delay))
-    return arr
+        arr.append(wait_random(max_delay))
+    res = await asyncio.gather(*arr)
+    return sorted(res)
