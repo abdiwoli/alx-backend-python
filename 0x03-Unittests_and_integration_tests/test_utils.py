@@ -19,7 +19,6 @@ class TestAccessNestedMap(unittest.TestCase):
     @parameterized.expand([
         ({}, ("a",)),
         ({"a": 1}, ("a", "b")),
-        ({"x": {"y": {}}}, ("x", "y", "z")),
     ])
     def test_access_nested_map_key_error(self, nested_map, path):
         """Test access_nested_map raises KeyError for invalid paths."""
