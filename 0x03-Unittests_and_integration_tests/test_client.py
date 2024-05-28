@@ -11,9 +11,11 @@ from fixtures import TEST_PAYLOAD
 class MockResponse:
     """ moc response class """
     def __init__(self, json_data):
+        """ init method """
         self.json_data = json_data
 
     def json(self):
+        """ return json """
         return self.json_data
 
 
@@ -78,6 +80,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     """ test integrations """
 
     def setUpClass(self):
+        """ setup method """
         self.get_patcher = patch('requests.get')
         self.mock_get = cls.get_patcher.start()
         self.mock_get.side_effect = [
@@ -86,14 +89,17 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         ]
 
         def tearDownClass(self):
+            """ tear down method """
             self.get_patcher.stop()
 
         def test_public_repos(cls):
+            """ test public """
             client = GithubOrgClient(org_name="google")
             repos = client.public_repos()
             cls.assertEqual(repos, cls.expected_repos)
 
         def test_public_repos_with_license(cls):
+            """ tets public """
             client = GithubOrgClient(org_name="google")
             repos = client.public_repos(license="apache-2.0")
             cls.assertEqual(repos, cls.apache2_repos)
