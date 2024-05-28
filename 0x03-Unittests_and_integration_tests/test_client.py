@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """ test_client.py """
 import unittest
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from unittest.mock import patch, Mock, PropertyMock
 from client import GithubOrgClient
 from utils import get_json
+from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -60,6 +61,30 @@ class TestGithubOrgClient(unittest.TestCase):
         """ check license """
         result = GithubOrgClient.has_license(repo, key)
         self.assertEqual(result, ex_result)
+
+
+arg = ('repos_url', 'expected_repos', 'apache2_repos')
+
+
+@parameterized_class(arg, TEST_PAYLOAD)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        # Patch requests.get to return example payloads
+        cls.get_patcher = patch('requests.get')
+        cls.mock_get = cls.get_patcher.start()
+
+        # Side effect to return the correct fixture for different URLs
+        cls.mock_get.side_effect = [
+            MockResponse(org_payload),
+            MockResponse(repos_payload)
+        ]
+
+    @classmethod
+    def tearDownClass(cls):
+        # Stop the patcher
+        cls.get_patcher.stop()
 
 
 if __name__ == '__main__':
