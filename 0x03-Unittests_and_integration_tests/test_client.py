@@ -9,6 +9,7 @@ from fixtures import TEST_PAYLOAD
 
 
 class MockResponse:
+    """ moc response class """
     def __init__(self, json_data):
         self.json_data = json_data
 
@@ -74,17 +75,18 @@ class TestGithubOrgClient(unittest.TestCase):
 @parameterized_class(('org_payload', 'repos_payload', 'expected_repos',
                       'apache2_repos'), TEST_PAYLOAD)
 class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """ test integrations """
 
-    def setUpClass(cls):
-        cls.get_patcher = patch('requests.get')
-        cls.mock_get = cls.get_patcher.start()
-        cls.mock_get.side_effect = [
-            MockResponse(cls.org_payload),
-            MockResponse(cls.repos_payload)
+    def setUpClass(self):
+        self.get_patcher = patch('requests.get')
+        self.mock_get = cls.get_patcher.start()
+        self.mock_get.side_effect = [
+            MockResponse(self.org_payload),
+            MockResponse(self.repos_payload)
         ]
 
-        def tearDownClass(cls):
-            cls.get_patcher.stop()
+        tearDownClass(self):
+            self.get_patcher.stop()
 
         def test_public_repos(cls):
             client = GithubOrgClient(org_name="google")
