@@ -8,6 +8,14 @@ from utils import get_json
 from fixtures import TEST_PAYLOAD
 
 
+class MockResponse:
+    def __init__(self, json_data):
+        self.json_data = json_data
+
+    def json(self):
+        return self.json_data
+
+
 class TestGithubOrgClient(unittest.TestCase):
     """ TestGithubOrgClient(unittest.TestCase) """
 
@@ -63,28 +71,30 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, ex_result)
 
 
-arg = ('repos_url', 'expected_repos', 'apache2_repos')
-
-
-@parameterized_class(arg, TEST_PAYLOAD)
+@parameterized_class(('org_payload', 'repos_payload', 'expected_repos',
+                      'apache2_repos'), TEST_PAYLOAD)
 class TestIntegrationGithubOrgClient(unittest.TestCase):
 
-    @classmethod
     def setUpClass(cls):
-        # Patch requests.get to return example payloads
         cls.get_patcher = patch('requests.get')
         cls.mock_get = cls.get_patcher.start()
-
-        # Side effect to return the correct fixture for different URLs
         cls.mock_get.side_effect = [
-            MockResponse(org_payload),
-            MockResponse(repos_payload)
+            MockResponse(cls.org_payload),
+            MockResponse(cls.repos_payload)
         ]
 
-    @classmethod
-    def tearDownClass(cls):
-        # Stop the patcher
-        cls.get_patcher.stop()
+        def tearDownClass(cls):
+            cls.get_patcher.stop()
+
+        def test_public_repos(cls):
+            client = GithubOrgClient(org_name="google")
+            repos = client.public_repos()
+            cls.assertEqual(repos, cls.expected_repos)
+
+        def test_public_repos_with_license(cls):
+            client = GithubOrgClient(org_name="google")
+            repos = client.public_repos(license="apache-2.0")
+            cls.assertEqual(repos, cls.apache2_repos)
 
 
 if __name__ == '__main__':
