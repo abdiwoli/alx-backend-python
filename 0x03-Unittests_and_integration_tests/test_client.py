@@ -85,7 +85,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
             MockResponse(self.repos_payload)
         ]
 
-        tearDownClass(self):
+        def tearDownClass(self):
             self.get_patcher.stop()
 
         def test_public_repos(cls):
